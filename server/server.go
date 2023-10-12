@@ -7,7 +7,7 @@ import (
 	"net/rpc"
 )
 
-//struct nad kojim cemo pozivati metodu sabiranja
+//struct nad kojim cemo pozivati metode
 type API struct{
 	Values map[string] int;
 }
