@@ -52,6 +52,21 @@ type Server struct{
 	listener net.Listener
 	peers []*rpc.Client
 	wg *sync.WaitGroup
+	mu sync.Mutex
+}
+
+func (s *Server) Call(id int, serviceMethod string, args interface{}, reply interface{}) error {
+	s.mu.Lock()
+	peer := s.peers[id]
+	s.mu.Unlock()
+
+	// If this is called after shutdown (where client.Close is called), it will
+	// return an error.
+	if peer == nil {
+		return fmt.Errorf("call client %d after it's closed", id)
+	} else {
+		return peer.Call(serviceMethod, args, reply)
+	}
 }
 
 
